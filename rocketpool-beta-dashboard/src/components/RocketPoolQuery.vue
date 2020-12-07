@@ -82,25 +82,27 @@ export default class RocketPoolQuery extends Vue {
         this.fetchingNodes = true;
 
         const rp: RocketPoolAPI = new RocketPoolAPI(this.eth1Host, this.eth2Host);
-        rp.getNodeInformation().then((nodes: Node[]) => {
-            this.fetchingNodes = false;
+        rp.getNodeInformation()
+            .then((nodes: Node[]) => {
+                this.fetchingNodes = false;
 
-            if (nodes.length === 0) {
-                this.queryError = 'Unable to obtain node information';
-                return;
-            }
+                if (nodes.length === 0) {
+                    this.queryError = 'Unable to obtain node information';
+                    return;
+                }
 
-            this.nodes = nodes;
-        }).catch((error: any) => {
-            this.fetchingNodes = false;
+                this.nodes = nodes;
+            })
+            .catch((error: any) => {
+                this.fetchingNodes = false;
 
-            const errMsg = String(error);
-            console.log('Error getting node information: ' + errMsg);
-            if (errMsg.startsWith("Error: Returned values aren't valid, did it run Out of Gas?")) {
-                this.queryError = 'Eth1 node is not fully synced';
-                return;
-            }
-        });
+                const errMsg = String(error);
+                console.log('Error getting node information: ' + errMsg);
+                if (errMsg.startsWith("Error: Returned values aren't valid, did it run Out of Gas?")) {
+                    this.queryError = 'Eth1 node is not fully synced';
+                    return;
+                }
+            });
     }
 
     validateEthHosts(): boolean {
