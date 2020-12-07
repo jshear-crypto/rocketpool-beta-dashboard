@@ -54,11 +54,9 @@ export const EmptyMinipool: Minipool = {
 export class Eth2API {
     private batchSize = 10;
     private host: string;
-    private port: number;
 
-    public constructor(host: string, port: number) {
+    public constructor(host: string) {
         this.host = host;
-        this.port = port;
     }
 
     public async getMinipoolData(addresses: string[]): Promise<Minipool[]> {
@@ -91,9 +89,7 @@ export class Eth2API {
     }
 
     private getMinipoolQuery(addresses: string[]): string {
-        return (
-            protocol + '://' + this.host + ':' + this.port.toString() + validatorEndpoint + '?id=' + addresses.join(',')
-        );
+        return protocol + '://' + this.host + validatorEndpoint + '?id=' + addresses.join(',');
     }
 
     private queryMinipools(url: string): Promise<Minipool[]> {

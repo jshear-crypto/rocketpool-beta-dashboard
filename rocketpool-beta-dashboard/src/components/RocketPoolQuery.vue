@@ -1,8 +1,8 @@
 <template>
     <div>
         <h3>
-            For now, in order to query the Rocket Pool contracts, you need to provide the IP and ports for your Eth1 and Eth2
-            nodes. For more information on enabling queries in your nodes, visit
+            For now, in order to query the Rocket Pool contracts, you need to provide the hosts (IP & port) for your
+            Eth1 and Eth2 nodes. For more information on enabling queries in your nodes, visit
             <a
                 href="https://github.com/jshear-crypto/rocketpool-beta-dashboard"
                 target="_blank"
@@ -19,15 +19,13 @@
         <br />
         <br />
 
-        <div class="ports">
-            <label for="nodeIP">IP:</label>
-            <input id="nodeIP" type="text" v-model="nodeIP" />
+        <div class="hosts">
             <br />
-            <label for="eth1Port">Eth1 Port:</label>
-            <input id="eth1Port" type="text" v-model="eth1Port" />
+            <label for="eth1Host">Eth1 Host:</label>
+            <input id="eth1Host" type="text" placeholder="localhost:8547" v-model="eth1Host" />
             <br />
-            <label for="eth2Port">Eth2 Port:</label>
-            <input id="eth2Port" type="text" v-model="eth2Port" />
+            <label for="eth2Host">Eth2 Host:</label>
+            <input id="eth2Host" type="text" placeholder="localhost:5052" v-model="eth2Host" />
         </div>
         <br />
         <button type="button" @click="fetchNodes">Get Node Data</button>
@@ -39,7 +37,6 @@
                 <p class="update">Fetching node data... please be patient</p>
             </div>
         </div>
-
     </div>
 </template>
 
@@ -51,20 +48,17 @@ import CookieManager from '../utils/CookieManager';
 
 @Component({})
 export default class RocketPoolQuery extends Vue {
-    nodeIP = 'localhost';
-    eth1Port = '8547';
-    eth2Port = '5052';
+    eth1Host = 'localhost:8547';
+    eth2Host = 'localhost:5052';
 
     fetchingNodes = false;
     queryError = '';
 
     mounted() {
-        const nodeIPCookie = CookieManager.get('nodeip');
-        const eth1Cookie = CookieManager.get('eth1port');
-        const eth2Cookie = CookieManager.get('eth2port');
-        if (nodeIPCookie !== '') this.nodeIP = nodeIPCookie;
-        if (eth1Cookie !== '') this.eth1Port = eth1Cookie;
-        if (eth2Cookie !== '') this.eth2Port = eth2Cookie;
+        const eth1Cookie = CookieManager.get('eth1host');
+        const eth2Cookie = CookieManager.get('eth2host');
+        if (eth1Cookie !== '') this.eth1Host = eth1Cookie;
+        if (eth2Cookie !== '') this.eth2Host = eth2Cookie;
     }
 
     get nodes() {
@@ -79,16 +73,15 @@ export default class RocketPoolQuery extends Vue {
         this.queryError = '';
         this.nodes = [];
 
-        if (!this.validateEthPorts()) return;
+        if (!this.validateEthHosts()) return;
 
         // One month expiration for cookie
-        CookieManager.set('nodeip', this.nodeIP, 30 * 24 * 60 * 60);
-        CookieManager.set('eth1port', this.eth1Port, 30 * 24 * 60 * 60);
-        CookieManager.set('eth2port', this.eth2Port, 30 * 24 * 60 * 60);
+        CookieManager.set('eth1host', this.eth1Host, 30 * 24 * 60 * 60);
+        CookieManager.set('eth2host', this.eth2Host, 30 * 24 * 60 * 60);
 
         this.fetchingNodes = true;
 
-        const rp: RocketPoolAPI = new RocketPoolAPI(this.nodeIP, Number(this.eth1Port), Number(this.eth2Port));
+        const rp: RocketPoolAPI = new RocketPoolAPI(this.eth1Host, this.eth2Host);
         rp.getNodeInformation().then((nodes: Node[]) => {
             this.fetchingNodes = false;
 
@@ -101,21 +94,23 @@ export default class RocketPoolQuery extends Vue {
         });
     }
 
-    validateEthPorts(): boolean {
-        if (!this.validatePort(this.eth1Port)) {
-            this.queryError = 'Invalid value for Eth1 Port';
+    validateEthHosts(): boolean {
+        if (!this.validateHost(this.eth1Host)) {
+            this.queryError = 'Invalid value for Eth1 Host';
             return false;
         }
-        if (!this.validatePort(this.eth2Port)) {
-            this.queryError = 'Invalid value for Eth2 Port';
+        if (!this.validateHost(this.eth2Host)) {
+            this.queryError = 'Invalid value for Eth2 Host';
             return false;
         }
         return true;
     }
 
-    validatePort(port: string): boolean {
-        const p = Number(port);
-        return p >= 1 && p <= 65535 && Number.isInteger(p) && port === p.toString();
+    validateHost(host: string): boolean {
+        const hostParts: string[] = host.split(':');
+        if (hostParts.length !== 2) return false;
+        const port = Number(hostParts[1]);
+        return port >= 1 && port <= 65535 && Number.isInteger(port) && hostParts[1] === port.toString();
     }
 }
 </script>
@@ -155,7 +150,7 @@ button {
     margin: 0;
     padding: 0;
 }
-.ports {
+.hosts {
     display: inline-block;
     text-align: right;
 }
