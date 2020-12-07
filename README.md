@@ -1,9 +1,11 @@
 # Rocket Pool Pyrmont Beta Dashboard
-Welcome to the Rocket Pool beta dashboard! This dashboard can be used to get updates on the nodes in the Rocket Pool network. The dashboard is currently being hosted on https://rocketpoolbetadashboard.000webhostapp.com/
+Welcome to the Rocket Pool beta dashboard! This dashboard can be used to get updates on the nodes in the Rocket Pool network. The dashboard is currently being hosted on http://rocketpoolbetadashboard.000webhostapp.com/
 
 In its current implementation, the dashboard gets the state of the Rocket Pool network using Eth1 and Eth2 nodes that you can specify. It is recommended that you either run the dashboard on the same LAN as your nodes, or use an SSH tunnel to access them remotely. You should not expose your nodes APIs to the public.
 
 Note: Currently, only Geth and Lighthouse are supported. Prysm should work in theory if its RESTful endpoint is enabled, but I haven't had a chance to look into startup flags for Prysm or do any testing. If anyone wants to play around with Prysm or Infura, feel free to contribute :) I'll try to add Prysm support soon, but using the dashboard with Infura is probably a bad idea because it will eat up requests.
+
+Other note: Since the Geth node requires a standard WebSocket connection and not a Secure WebSocket connection, the dashboard must be accessed using http, not https.
 
 ## Updating Geth and Lighthouse to allow API calls
 In order for the dashboard to get the data from the nodes, the nodes need to be updated to expose their API (again, you do not need to expose the ports to the public, they should either be restricted to the LAN or an SSH tunnel should be used).
@@ -30,7 +32,7 @@ Now we have everything enabled on the nodes, so all we have to do is expose the 
 Note: If you are using SSH tunnels or running the dashboard on the same machine as your nodes, you can restrict the Docker ports to only be available to that machine. Do this by adding `127.0.0.1:` in front of the ports. E.g. `- "127.0.0.1:8547:8547"`
 
 ### Activating the changes
-Now that we've made all the necessary changes, just run `rocketpool service pause && rocketpool service start` so that they take effect. Now, go enjoy the dashboard at https://rocketpoolbetadashboard.000webhostapp.com/!
+Now that we've made all the necessary changes, just run `rocketpool service pause && rocketpool service start` so that they take effect. Now, go enjoy the dashboard at http://rocketpoolbetadashboard.000webhostapp.com/!
 
 ## SSH Tunnels
 If this dashboard is not open on the same network as the nodes, then you'll need SSH tunnels. Why do you need SSH tunnels? So that you can hit your new node API endpoints without exposing the ports we opened to the public. Google can help you out with setting up the SSH tunnels -- you'll need to do it for ports 8547 and 5052.
