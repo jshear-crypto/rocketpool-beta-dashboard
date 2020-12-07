@@ -32,6 +32,19 @@ Now we have everything enabled on the nodes, so all we have to do is expose the 
 ### Activating the changes
 Now that we've made all the necessary changes, just run `rocketpool service pause && rocketpool service start` so that they take effect. Now, go enjoy the dashboard at https://rocketpoolbetadashboard.000webhostapp.com/!
 
+## SSH Tunnels
+If this dashboard is not open on the same box as the nodes, then you'll need SSH tunnels. Why do you need SSH tunnels? So that you can hit your new node API endpoints without exposing the ports we opened to the public. Google can help you out with setting up the SSH tunnels -- you'll need to do it for ports 8547 and 5052.
+
+On Mac, an example `~/.ssh/config` file might look something like this, replacing {NODE_HOST} with the IP of the host your nodes are running on and {IDENTITY_FILE} with a path to your SSH private key file:
+
+```
+Host {NODE_HOST}
+    IdentityFile {IDENTITY_FILE}
+    Port 22
+    LocalForward 8547 localhost:8547
+    LocalForward 5052 localhost:5052
+```
+
 ### Again, nothing should be exposed to the public!!!
 Everything we've done here is exposing ports internally from the Rocket Pool stack to the machine it is running on. There is no need to expose any of these ports to the public. I feel like I've said this enough times now, so hopefully nobody makes that mistake. Exposing uneccessary ports to the public just increases potential attack vectors -- you should only open up a port when you understand why you are doing it.
 
