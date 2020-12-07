@@ -1,5 +1,5 @@
 # Rocket Pool Pyrmont Beta Dashboard
-Welcome to the Rocket Pool beta dashboard! This dashboard can be used to get updates on the nodes in the Rocket Pool network. The dashboard is currently being hosted on https://rocketpoolbeta.tk
+Welcome to the Rocket Pool beta dashboard! This dashboard can be used to get updates on the nodes in the Rocket Pool network. The dashboard is currently being hosted on https://rocketpoolbetadashboard.000webhostapp.com/
 
 In its current implementation, the dashboard gets the state of the Rocket Pool network using the Eth1 and Eth2 nodes running on the machine. In other words, the dashboard has to be opened on the same machine that the Rocket Pool stack is being run (or where an SSH tunnel is being used).
 
@@ -30,7 +30,7 @@ Now we have everything enabled on the nodes, so all we have to do is expose the 
 ![Docker Example](instructions/docker-compose-example.png)
 
 ### Activating the changes
-Now that we've made all the necessary changes, just run `rocketpool service pause && rocketpool service start` so that they take effect. Now, go enjoy the dashboard at https://rocketpoolbeta.tk!
+Now that we've made all the necessary changes, just run `rocketpool service pause && rocketpool service start` so that they take effect. Now, go enjoy the dashboard at https://rocketpoolbetadashboard.000webhostapp.com/!
 
 ### Again, nothing should be exposed to the public!!!
 Everything we've done here is exposing ports internally from the Rocket Pool stack to the machine it is running on. There is no need to expose any of these ports to the public. I feel like I've said this enough times now, so hopefully nobody makes that mistake. Exposing uneccessary ports to the public just increases potential attack vectors -- you should only open up a port when you understand why you are doing it.
