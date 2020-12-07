@@ -5,9 +5,9 @@
         <br />
         <h3>
             Welcome to the Rocket Pool Beta Dashboard! Want to see where you stand in the rankings? You've come to the
-            right place! This dashboard is not affiliated with the official Rocket Pool team -- it is just a fun side
-            project. Reach out to @jshear on the Rocket Pool discord with any errors, questions, or
-            suggestions. If you somehow got here by mistake, you should head over to
+            right place! This dashboard is not affiliated with the official Rocket Pool team. Reach out to @jshear on
+            the Rocket Pool discord with any errors, questions, or suggestions. If you somehow got here by mistake, you
+            should head over to
             <a href="https://www.rocketpool.net/" target="_blank" rel="noopener noreferrer">Rocket Pool</a>
             to learn more.
         </h3>

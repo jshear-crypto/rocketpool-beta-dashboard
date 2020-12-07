@@ -1,12 +1,19 @@
 <template>
     <div>
         <h3>
-            For now, in order to query the Rocket Pool contracts, you need to point me towards your Eth1 and Eth2 nodes.
-            For more information on enabling queries in your nodes, visit
-            <a href="https://github.com/jshear-crypto/rocketpool-beta-dashboard" target="_blank" rel="noopener noreferrer">the GitHub page</a>.
+            For now, in order to query the Rocket Pool contracts, you need to provide the ports for your Eth1 and Eth2
+            nodes. For more information on enabling queries in your nodes, visit
+            <a
+                href="https://github.com/jshear-crypto/rocketpool-beta-dashboard"
+                target="_blank"
+                rel="noopener noreferrer"
+                >the GitHub page</a
+            >.
         </h3>
         <h3>
-            Note: These rankings are NOT official, and do NOT guarentee any portion of the Rocket Pool Beta reward pool. These rankings are NOT provided by the Rocket Pool team, and the Rocket Pool team may change the reward distribution amounts/ranking system.
+            Note: These rankings are NOT official, and do NOT guarantee any portion of the Rocket Pool Beta reward pool.
+            These rankings are NOT provided by the Rocket Pool team, and the Rocket Pool team may change the reward
+            distribution amounts/ranking system.
         </h3>
 
         <br />
