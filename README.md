@@ -1,14 +1,12 @@
 # Rocket Pool Pyrmont Beta Dashboard
 Welcome to the Rocket Pool beta dashboard! This dashboard can be used to get updates on the nodes in the Rocket Pool network. The dashboard is currently being hosted on https://rocketpoolbetadashboard.000webhostapp.com/
 
-In its current implementation, the dashboard gets the state of the Rocket Pool network using the Eth1 and Eth2 nodes running on the machine. In other words, the dashboard has to be opened on the same machine that the Rocket Pool stack is being run (or where an SSH tunnel is being used).
+In its current implementation, the dashboard gets the state of the Rocket Pool network using Eth1 and Eth2 nodes that you can specify. It is recommended that you either run the dashboard on the same LAN as your nodes, or use an SSH tunnel to access them remotely. You should not expose your nodes APIs to the public.
 
 Note: Currently, only Geth and Lighthouse are supported. Prysm should work in theory if its RESTful endpoint is enabled, but I haven't had a chance to look into startup flags for Prysm or do any testing. If anyone wants to play around with Prysm or Infura, feel free to contribute :) I'll try to add Prysm support soon, but using the dashboard with Infura is probably a bad idea because it will eat up requests.
 
-Security note: You do NOT need to expose any ports to the public for this to work. This must be open on the same host as your nodes (unless you have SSH tunnels in place), as it simply queries `localhost` to connect to your node. Again, do NOT expose ports on your host to the public.
-
 ## Updating Geth and Lighthouse to allow API calls
-In order for the dashboard to get the data from the nodes, the nodes need to be updated to expose their API (again, this is exposing it only to `localhost`, NOT to the public).
+In order for the dashboard to get the data from the nodes, the nodes need to be updated to expose their API (again, you do not need to expose the ports to the public, they should either be restricted to the LAN or an SSH tunnel should be used).
 
 ### Geth
 The dashboard uses WebSockets to get the information from the Geth node. So, we need to enable the WebSocket server on the node in the start script. For this example, I will use port 8547 as the WebSocket port for Geth. You can use any port you want. If you choose a different port, make sure to use the same port that you chose when updating Docker below.
@@ -33,7 +31,7 @@ Now we have everything enabled on the nodes, so all we have to do is expose the 
 Now that we've made all the necessary changes, just run `rocketpool service pause && rocketpool service start` so that they take effect. Now, go enjoy the dashboard at https://rocketpoolbetadashboard.000webhostapp.com/!
 
 ## SSH Tunnels
-If this dashboard is not open on the same box as the nodes, then you'll need SSH tunnels. Why do you need SSH tunnels? So that you can hit your new node API endpoints without exposing the ports we opened to the public. Google can help you out with setting up the SSH tunnels -- you'll need to do it for ports 8547 and 5052.
+If this dashboard is not open on the same network as the nodes, then you'll need SSH tunnels. Why do you need SSH tunnels? So that you can hit your new node API endpoints without exposing the ports we opened to the public. Google can help you out with setting up the SSH tunnels -- you'll need to do it for ports 8547 and 5052.
 
 On Mac, an example `~/.ssh/config` file might look something like this, replacing {NODE_HOST} with the IP of the host your nodes are running on and {IDENTITY_FILE} with a path to your SSH private key file:
 
@@ -46,7 +44,7 @@ Host {NODE_HOST}
 ```
 
 ### Again, nothing should be exposed to the public!!!
-Everything we've done here is exposing ports internally from the Rocket Pool stack to the machine it is running on. There is no need to expose any of these ports to the public. I feel like I've said this enough times now, so hopefully nobody makes that mistake. Exposing uneccessary ports to the public just increases potential attack vectors -- you should only open up a port when you understand why you are doing it.
+Everything we've done here is exposing ports internally from the Rocket Pool stack to the machine it is running on, and to the local network if you choose to. There is no need to expose any of these ports to the public. I feel like I've said this enough times now, so hopefully nobody makes that mistake. Exposing uneccessary ports to the public just increases potential attack vectors -- you should only open up a port when you understand why you are doing it.
 
 ## Using the Dashboard
-Now that your nodes are accepting API calls, using the dashboard is easy! Just type in the Eth1 and Eth2 ports for their respective APIs, and then query the node data! Please reach out to @jshear on the Rocket Pool discord with any questions, errors, or suggestions.
+Now that your nodes are accepting API calls, using the dashboard is easy! Just type in the local IP of the machine the nodes are running on, the Eth1 port, and the Eth2 port, and then query the node data! Please reach out to @jshear on the Rocket Pool discord with any questions, errors, or suggestions.
