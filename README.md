@@ -23,9 +23,11 @@ Open up `~/.rocketpool/chains/eth2/start-beacon.sh`. We need to add the followin
 ![Lighthouse Example](instructions/lighthouse-example.png)
 
 ### Docker
-Now we have everything enabled on the nodes, so all we have to do is expose the Docker ports for the nodes to the host machine. We can do this in `~/.rocketpool/docker-compose.yml`. We need to update the `ports` attribute in the `eth1` and `eth2` services. Under the `eth1` service, add the following to the ports: `- "127.0.0.1:8547:8547/tcp"`. Under the `eth2` service, add the following to the ports: `- "127.0.0.1:5052:5052/tcp"`. That's it! The `docker-compose.yml` file should look something like this:
+Now we have everything enabled on the nodes, so all we have to do is expose the Docker ports for the nodes to the host machine. We can do this in `~/.rocketpool/docker-compose.yml`. We need to update the `ports` attribute in the `eth1` and `eth2` services. Under the `eth1` service, add the following to the ports: `- "8547:8547/tcp"`. Under the `eth2` service, add the following to the ports: `- "5052:5052/tcp"`. That's it! The `docker-compose.yml` file should look something like this:
 
 ![Docker Example](instructions/docker-compose-example.png)
+
+Note: If you are using SSH tunnels or running the dashboard on the same machine as your nodes, you can restrict the Docker ports to only be available to that machine. Do this by adding `127.0.0.1:` in front of the ports. E.g. `- "127.0.0.1:8547:8547"`
 
 ### Activating the changes
 Now that we've made all the necessary changes, just run `rocketpool service pause && rocketpool service start` so that they take effect. Now, go enjoy the dashboard at https://rocketpoolbetadashboard.000webhostapp.com/!
