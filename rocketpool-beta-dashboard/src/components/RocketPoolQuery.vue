@@ -91,6 +91,15 @@ export default class RocketPoolQuery extends Vue {
             }
 
             this.nodes = nodes;
+        }).catch((error: any) => {
+            this.fetchingNodes = false;
+
+            const errMsg = String(error);
+            console.log('Error getting node information: ' + errMsg);
+            if (errMsg.startsWith("Error: Returned values aren't valid, did it run Out of Gas?")) {
+                this.queryError = 'Eth1 node is not fully synced';
+                return;
+            }
         });
     }
 

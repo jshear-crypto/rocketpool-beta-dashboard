@@ -29,10 +29,7 @@ class RocketPoolAPI {
     }
 
     public getNodeInformation(): Promise<Node[]> {
-        return this.getNodes().catch((error: any): Node[] => {
-            console.log('Error getting node information: ' + error);
-            return [];
-        });
+        return this.getNodes();
     }
 
     private getNodes(): Promise<Node[]> {
