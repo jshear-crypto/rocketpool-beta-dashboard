@@ -1,0 +1,37 @@
+{
+  "name": "rocketpool",
+  "version": "1.0.0",
+  "description": "A javascript library for interacting with the Rocket Pool network",
+  "main": "dist/rocketpool/rocketpool.js",
+  "types": "dist/rocketpool/rocketpool.d.ts",
+  "scripts": {
+    "build": "tsc && npx babel build -d dist && cp build/rocketpool/rocketpool.d.ts dist/rocketpool/rocketpool.d.ts && rm -rf build",
+    "test": "mocha --require ts-node/register --timeout 20000 src/test/index.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rocket-pool/rocketpool-js.git"
+  },
+  "author": "Rocket Pool",
+  "bugs": {
+    "url": "https://github.com/rocket-pool/rocketpool-js/issues"
+  },
+  "homepage": "https://github.com/rocket-pool/rocketpool-js#readme",
+  "dependencies": {
+    "pako": "^1.0.11",
+    "web3": "^1.3.0"
+  },
+  "devDependencies": {
+    "@babel/runtime": "^7.10.4",
+    "@chainsafe/lodestar-types": "^0.9.0",
+    "@chainsafe/ssz": "^0.6.7",
+    "@types/chai": "^4.2.11",
+    "@types/mocha": "^5.2.7",
+    "@types/pako": "^1.0.1",
+    "babel-cli": "^6.26.0",
+    "babel-preset-env": "^1.7.0",
+    "chai": "^4.2.0",
+    "ts-node": "^8.10.2",
+    "typescript": "^3.9.5"
+  }
+}
