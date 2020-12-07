@@ -145,7 +145,7 @@ export default class NodeLeaderboard extends Vue {
     onNodeSelected(rank: number) {
         this.selectedNode = this.nodes[rank - 1];
     }
-} // TODO "Showing X of Y"
+}
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
