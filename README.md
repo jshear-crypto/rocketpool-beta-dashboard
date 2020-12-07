@@ -3,7 +3,7 @@ Welcome to the Rocket Pool beta dashboard! This dashboard can be used to get upd
 
 In its current implementation, the dashboard gets the state of the Rocket Pool network using the Eth1 and Eth2 nodes running on the machine. In other words, the dashboard has to be opened on the same machine that the Rocket Pool stack is being run (or where an SSH tunnel is being used).
 
-Note: Currently, only Geth and Lighthouse are supported. If anyone wants to play around with Prysm or Infura, feel free to contribute :) I'll try to add Prysm support soon, but using the dashboard with Infura is probably a bad idea because it will eat up requests.
+Note: Currently, only Geth and Lighthouse are supported. Prysm should work in theory if its RESTful endpoint is enabled, but I haven't had a chance to look into startup flags for Prysm or do any testing. If anyone wants to play around with Prysm or Infura, feel free to contribute :) I'll try to add Prysm support soon, but using the dashboard with Infura is probably a bad idea because it will eat up requests.
 
 Security note: You do NOT need to expose any ports to the public for this to work. This must be open on the same host as your nodes (unless you have SSH tunnels in place), as it simply queries `localhost` to connect to your node. Again, do NOT expose ports on your host to the public.
 
