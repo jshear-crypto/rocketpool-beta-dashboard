@@ -19,11 +19,13 @@ const EmptyNode: Node = { address: '0', rank: 0, minipools: Array<Minipool>(), r
 
 class RocketPoolAPI {
     public rpInstance: RocketPool;
+    private nodeIP: string;
     private eth2Port: number;
 
-    public constructor(eth1Port: number, eth2Port: number) {
-        this.rpInstance = new RocketPool(this.getProvider(eth1Port, true), new Storage().getArtifact());
+    public constructor(nodeIP: string, eth1Port: number, eth2Port: number) {
+        this.nodeIP = nodeIP;
         this.eth2Port = eth2Port;
+        this.rpInstance = new RocketPool(this.getProvider(eth1Port, true), new Storage().getArtifact());
     }
 
     public getNodeInformation(): Promise<Node[]> {
@@ -121,7 +123,7 @@ class RocketPoolAPI {
                     return new Promise<Minipool[]>((resolve, reject) => {
                         resolve([]);
                     });
-                return new Eth2API(this.eth2Port)
+                return new Eth2API(this.nodeIP, this.eth2Port)
                     .getMinipoolData(addresses)
                     .then((minipools: Minipool[]): Minipool[] => {
                         if (minipools.length === 0 || minipools.length === 1) return minipools;
@@ -134,9 +136,9 @@ class RocketPoolAPI {
     }
 
     private getProvider(port: number, ws: boolean): Web3 {
-        if (!ws) return new Web3(new Web3.providers.HttpProvider('http://localhost:' + port.toString()));
+        if (!ws) return new Web3(new Web3.providers.HttpProvider('http://' + this.nodeIP + ':' + port.toString()));
 
-        return new Web3(new Web3.providers.WebsocketProvider('ws://localhost:' + port.toString()));
+        return new Web3(new Web3.providers.WebsocketProvider('ws://' + this.nodeIP + ':' + port.toString()));
     }
 }
 

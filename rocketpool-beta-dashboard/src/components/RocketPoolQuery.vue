@@ -1,7 +1,7 @@
 <template>
     <div>
         <h3>
-            For now, in order to query the Rocket Pool contracts, you need to provide the ports for your Eth1 and Eth2
+            For now, in order to query the Rocket Pool contracts, you need to provide the IP and ports for your Eth1 and Eth2
             nodes. For more information on enabling queries in your nodes, visit
             <a
                 href="https://github.com/jshear-crypto/rocketpool-beta-dashboard"
@@ -20,20 +20,26 @@
         <br />
 
         <div class="ports">
+            <label for="nodeIP">IP:</label>
+            <input id="nodeIP" type="text" v-model="nodeIP" />
+            <br />
             <label for="eth1Port">Eth1 Port:</label>
             <input id="eth1Port" type="text" v-model="eth1Port" />
             <br />
             <label for="eth2Port">Eth2 Port:</label>
             <input id="eth2Port" type="text" v-model="eth2Port" />
-            <br />
-            <button type="button" @click="fetchNodes">Get Node Data</button>
-            <br />
+        </div>
+        <br />
+        <button type="button" @click="fetchNodes">Get Node Data</button>
+        <br />
+        <div class="status">
             <p class="error" v-if="queryError">{{ queryError }}</p>
             <div v-if="fetchingNodes">
                 <img src="../assets/rocket.gif" />
                 <p class="update">Fetching node data... please be patient</p>
             </div>
         </div>
+
     </div>
 </template>
 
@@ -45,6 +51,7 @@ import CookieManager from '../utils/CookieManager';
 
 @Component({})
 export default class RocketPoolQuery extends Vue {
+    nodeIP = 'localhost';
     eth1Port = '8547';
     eth2Port = '5052';
 
@@ -52,8 +59,10 @@ export default class RocketPoolQuery extends Vue {
     queryError = '';
 
     mounted() {
+        const nodeIPCookie = CookieManager.get('nodeip');
         const eth1Cookie = CookieManager.get('eth1port');
         const eth2Cookie = CookieManager.get('eth2port');
+        if (nodeIPCookie !== '') this.nodeIP = nodeIPCookie;
         if (eth1Cookie !== '') this.eth1Port = eth1Cookie;
         if (eth2Cookie !== '') this.eth2Port = eth2Cookie;
     }
@@ -73,12 +82,13 @@ export default class RocketPoolQuery extends Vue {
         if (!this.validateEthPorts()) return;
 
         // One month expiration for cookie
+        CookieManager.set('nodeip', this.nodeIP, 30 * 24 * 60 * 60);
         CookieManager.set('eth1port', this.eth1Port, 30 * 24 * 60 * 60);
         CookieManager.set('eth2port', this.eth2Port, 30 * 24 * 60 * 60);
 
         this.fetchingNodes = true;
 
-        const rp: RocketPoolAPI = new RocketPoolAPI(Number(this.eth1Port), Number(this.eth2Port));
+        const rp: RocketPoolAPI = new RocketPoolAPI(this.nodeIP, Number(this.eth1Port), Number(this.eth2Port));
         rp.getNodeInformation().then((nodes: Node[]) => {
             this.fetchingNodes = false;
 
@@ -133,6 +143,7 @@ input {
 }
 button {
     margin-bottom: 15px;
+    text-align: center;
 }
 .update {
     font-weight: bold;
@@ -143,5 +154,12 @@ button {
     font-weight: bold;
     margin: 0;
     padding: 0;
+}
+.ports {
+    display: inline-block;
+    text-align: right;
+}
+.status {
+    text-align: center;
 }
 </style>

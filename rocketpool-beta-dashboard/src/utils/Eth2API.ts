@@ -1,5 +1,4 @@
 const protocol = 'http';
-const eth2Host = 'localhost';
 const validatorEndpoint = '/eth/v1/beacon/states/head/validators';
 
 interface MinipoolResponseObject {
@@ -54,9 +53,11 @@ export const EmptyMinipool: Minipool = {
 
 export class Eth2API {
     private batchSize = 10;
+    private host: string;
     private port: number;
 
-    public constructor(port: number) {
+    public constructor(host: string, port: number) {
+        this.host = host;
         this.port = port;
     }
 
@@ -91,7 +92,7 @@ export class Eth2API {
 
     private getMinipoolQuery(addresses: string[]): string {
         return (
-            protocol + '://' + eth2Host + ':' + this.port.toString() + validatorEndpoint + '?id=' + addresses.join(',')
+            protocol + '://' + this.host + ':' + this.port.toString() + validatorEndpoint + '?id=' + addresses.join(',')
         );
     }
 

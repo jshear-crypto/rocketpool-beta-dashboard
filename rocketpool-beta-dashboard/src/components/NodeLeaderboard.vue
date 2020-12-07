@@ -38,6 +38,7 @@
                     </tr>
                 </tbody>
             </table>
+            <span class="tableMessage">Click on any node address for additional information</span>
             <div class="pageButtons">
                 <span>{{ displayCountMessage }}</span>
                 <img @click="page--" src="../assets/btn-arrow-left-black.png" />
@@ -196,6 +197,10 @@ export default class NodeLeaderboard extends Vue {
 }
 .addressColumn {
     width: 450px;
+}
+.tableMessage {
+    float: left;
+    font-weight: bold;
 }
 table {
     text-align: center;
