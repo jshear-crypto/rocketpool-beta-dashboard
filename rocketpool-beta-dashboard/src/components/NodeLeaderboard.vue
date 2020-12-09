@@ -1,12 +1,17 @@
 <template>
     <div class="leaderboardContainer">
         <div class="nodeSearch">
-            <label for="nodeAddress">Node Address:</label>
-            <input id="nodeAddress" type="text" v-model="nodeAddress" />
+            <NodeTypeahead :addresses="nodeAddresses" v-model="nodeAddress" @submit="searchForNode" />
             <button type="button" @click="searchForNode">Search</button>
             <span v-if="searchError" class="error">{{ searchError }}</span>
         </div>
         <div class="tableContainer">
+            <span class="tableMessage">Click on any node address for additional information</span>
+            <div class="pageButtons">
+                <span>{{ displayCountMessage }}</span>
+                <img @click="page--" src="../assets/btn-arrow-left-black.png" />
+                <img @click="page++" src="../assets/btn-arrow-right-black.png" />
+            </div>
             <table>
                 <thead>
                     <tr>
@@ -30,6 +35,7 @@
                         v-for="node in displayNodes"
                         :key="node.rank"
                         :class="{ selectedNode: node.address === nodeAddress }"
+                        ref="displayRows"
                     >
                         <td>{{ node.rank }}</td>
                         <td class="clickable" @click="onNodeSelected(node.rank)">{{ node.address }}</td>
@@ -51,15 +57,20 @@
 <script lang="ts">
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import { Node } from '../utils/rocketpool';
-import CookieManager from '../utils/CookieManager';
+import NodeTypeahead from '@/components/NodeTypeahead.vue';
+import { Node } from '@/utils/rocketpool';
+import CookieManager from '@/utils/CookieManager';
 
-@Component({})
+@Component({
+    components: {
+        NodeTypeahead,
+    },
+})
 export default class NodeLeaderboard extends Vue {
     nodeAddress = '';
     searchError = '';
     searchedNodeIndex = 0;
-    pageSize = 10;
+    pageSize = 50;
     page = 1;
     sortProperty = 'rank';
 
@@ -67,7 +78,7 @@ export default class NodeLeaderboard extends Vue {
         this.nodeAddress = CookieManager.get('nodeaddress');
     }
 
-    get nodes() {
+    get nodes(): Node[] {
         return this.$store.getters.nodes;
     }
 
@@ -75,7 +86,13 @@ export default class NodeLeaderboard extends Vue {
         this.$store.commit('updateNodes', nodes);
     }
 
-    get selectedNode() {
+    get nodeAddresses(): string[] {
+        return this.nodes.map((node: Node): string => {
+            return node.address;
+        });
+    }
+
+    get selectedNode(): Node {
         return this.$store.getters.selectedNode;
     }
 
@@ -83,7 +100,7 @@ export default class NodeLeaderboard extends Vue {
         this.$store.commit('selectNode', node);
     }
 
-    get sortedNodes() {
+    get sortedNodes(): Node[] {
         if (this.sortProperty === 'minipools') {
             return [...this.nodes].sort((a: Node, b: Node) => {
                 return b.minipools.length - a.minipools.length;
@@ -93,7 +110,7 @@ export default class NodeLeaderboard extends Vue {
         return this.nodes;
     }
 
-    get displayNodes() {
+    get displayNodes(): Node[] {
         if (this.pageSize < 1) this.pageSize = 1;
         if (this.page < 1) this.page = 1;
         if (this.nodes.length < this.pageSize) return this.nodes;
@@ -113,7 +130,7 @@ export default class NodeLeaderboard extends Vue {
         return display;
     }
 
-    get displayCountMessage() {
+    get displayCountMessage(): string {
         const start = (this.page - 1) * this.pageSize + 1;
         let end = this.page * this.pageSize;
         if (end > this.nodes.length) end = this.nodes.length;
@@ -140,7 +157,14 @@ export default class NodeLeaderboard extends Vue {
     }
 
     showSearchedNode() {
-        this.page = Math.floor(this.searchedNodeIndex / 10) + 1;
+        this.page = Math.floor(this.searchedNodeIndex / this.pageSize) + 1;
+        const rows = this.$refs.displayRows as Element[];
+        const row: Element = rows[this.searchedNodeIndex % this.pageSize];
+        row.scrollIntoView({
+            behavior: 'smooth',
+            block: 'center',
+            inline: 'center',
+        });
     }
 
     onNodeSelected(rank: number) {
@@ -164,13 +188,9 @@ export default class NodeLeaderboard extends Vue {
 .nodeSearch {
     margin-bottom: 10px;
 }
-.nodeSearch label {
+.nodeSearch span {
+    margin-left: 5px;
     font-weight: bold;
-    margin-right: 5px;
-}
-.nodeSearch input {
-    margin-right: 10px;
-    width: 40%;
 }
 .tableContainer {
     text-align: center;

@@ -61,7 +61,7 @@ export class Eth2API {
 
     public async getMinipoolData(addresses: string[]): Promise<Minipool[]> {
         if (addresses.length === 0) {
-            return new Promise<Minipool[]>(function(resolve, reject) {
+            return new Promise<Minipool[]>((resolve: any) => {
                 resolve([]);
             });
         }
@@ -69,7 +69,7 @@ export class Eth2API {
         if (addresses.length <= this.batchSize) return this.queryMinipools(this.getMinipoolQuery(addresses));
 
         const minipools: Minipool[] = [];
-        let minipoolPromise: Promise<void> = new Promise((resolve, reject) => {
+        let minipoolPromise: Promise<void> = new Promise((resolve: any) => {
             resolve();
         });
         for (let i = 0; i < addresses.length + this.batchSize; i += this.batchSize) {
@@ -93,7 +93,7 @@ export class Eth2API {
     }
 
     private queryMinipools(url: string): Promise<Minipool[]> {
-        return new Promise<Minipool[]>((resolve, reject) => {
+        return new Promise<Minipool[]>((resolve: any, reject: any) => {
             const request = new XMLHttpRequest();
             request.onload = () => {
                 if (request.status === 200) {

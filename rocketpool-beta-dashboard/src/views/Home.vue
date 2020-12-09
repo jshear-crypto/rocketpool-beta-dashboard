@@ -36,7 +36,7 @@ import { EmptyNode } from '@/utils/rocketpool';
 })
 export default class Home extends Vue {
     mounted() {
-        if (window.location.protocol === 'https:') window.location.href = document.URL.replace("https://", "http://");
+        if (window.location.protocol === 'https:') window.location.href = document.URL.replace('https://', 'http://');
     }
 
     get showLeaderboard() {

@@ -28,7 +28,7 @@
             <input id="eth2Host" type="text" placeholder="localhost:5052" v-model="eth2Host" />
         </div>
         <br />
-        <button type="button" @click="fetchNodes">Get Node Data</button>
+        <button type="button" :disabled="fetchingNodes" @click="fetchNodes">Get Node Data</button>
         <br />
         <div class="status">
             <p class="error" v-if="queryError">{{ queryError }}</p>
@@ -86,11 +86,6 @@ export default class RocketPoolQuery extends Vue {
             .then((nodes: Node[]) => {
                 this.fetchingNodes = false;
 
-                if (nodes.length === 0) {
-                    this.queryError = 'Unable to obtain node information';
-                    return;
-                }
-
                 this.nodes = nodes;
             })
             .catch((error: any) => {
@@ -102,6 +97,8 @@ export default class RocketPoolQuery extends Vue {
                     this.queryError = 'Eth1 node is not fully synced';
                     return;
                 }
+
+                this.queryError = 'Unable to obtain node information';
             });
     }
 
@@ -146,6 +143,7 @@ input {
     margin-left: 5px;
     margin-right: 30px;
     margin-bottom: 15px;
+    padding: 3px;
 }
 button {
     margin-bottom: 15px;

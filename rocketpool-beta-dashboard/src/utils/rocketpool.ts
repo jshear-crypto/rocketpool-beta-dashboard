@@ -117,7 +117,7 @@ class RocketPoolAPI {
         return this.getNodeMinipoolPublicKeys(address).then(
             (addresses: string[]): Promise<Minipool[]> => {
                 if (addresses.length === 0)
-                    return new Promise<Minipool[]>((resolve, reject) => {
+                    return new Promise<Minipool[]>((resolve: any) => {
                         resolve([]);
                     });
                 return new Eth2API(this.eth2Host)
