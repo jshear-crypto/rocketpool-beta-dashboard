@@ -115,6 +115,7 @@ export default class RocketPoolQuery extends Vue {
     }
 
     validateHost(host: string): boolean {
+        if (host.includes('infura')) return true;
         const hostParts: string[] = host.split(':');
         if (hostParts.length !== 2) return false;
         const port = Number(hostParts[1]);
