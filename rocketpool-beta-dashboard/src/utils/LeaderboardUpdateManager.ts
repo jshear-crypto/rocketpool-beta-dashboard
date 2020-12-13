@@ -35,7 +35,7 @@ class LeaderboardUpdateManager {
         });
     }
 
-    public setNodes(nodes: Node[]): Promise<string> {
+    public setNodes(nodes: Node[], auth: string): Promise<string> {
         return new Promise<string>((resolve: any) => {
             const req = new XMLHttpRequest();
             req.open('POST', '/php/controllers/NodeLeaderboardController.php?action=setNodes', true);
@@ -55,7 +55,7 @@ class LeaderboardUpdateManager {
             req.onerror = () => {
                 resolve('Failed to set nodes');
             };
-            req.send(JSON.stringify({ nodes: nodes }));
+            req.send(JSON.stringify({ auth: auth, nodes: nodes }));
         });
     }
 }

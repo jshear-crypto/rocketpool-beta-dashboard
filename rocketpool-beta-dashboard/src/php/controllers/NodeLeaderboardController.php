@@ -8,6 +8,7 @@ $HTTP_NOT_FOUND = 404;
 $HTTP_INTERNAL_SERVER_ERROR = 500;
 
 $NODE_FILE = '../assets/nodes.json';
+$ADMIN_FILE = '../assets/admin.txt';
 
 $routes = array(
     'getNodes' => 'getNodes',
@@ -31,16 +32,24 @@ function sendResponse($data) {
     ));
 }
 
+function authorize($password) {
+    return password_verify($password, file_get_contents($GLOBALS['ADMIN_FILE']));
+}
+
 function getNodes() {
     $json = file_get_contents($GLOBALS['NODE_FILE']);
     $node_update = json_decode($json, true);
     sendResponse($node_update);
 }
 
-function setNodes() {    
+function setNodes() {
+    if (!isset($_REQUEST['auth']) || !authorize($_REQUEST['auth'])) {
+        sendError($GLOBALS['HTTP_UNAUTHORIZED'], 'Unauthorized');
+        return;
+    }
     $node_update_array = array(
         'time' => time(),
-        'nodes' => $_POST['nodes']
+        'nodes' => $_REQUEST['nodes']
     );
     $node_update = json_encode($node_update_array);
     if (!$node_update) {

@@ -5,7 +5,8 @@
             <button type="button" @click="searchForNode">Search</button>
             <span v-if="searchError" class="error">{{ searchError }}</span>
             <div v-if="showUpdateLeaderboard">
-                <button v-if="showUpdateLeaderboard" type="button" @click="updateLeaderboard">Update</button>
+                <button type="button" @click="updateLeaderboard">Update</button>
+                <input v-model="updateAuth" type="text" />
                 <span>{{ updateResponse }}</span>
             </div>
         </div>
@@ -75,6 +76,7 @@ export default class NodeLeaderboard extends Vue {
     nodeAddress = '';
     searchError = '';
     updateResponse = '';
+    updateAuth = '';
     searchedNodeIndex = 0;
     pageSize = 50;
     page = 1;
@@ -82,6 +84,7 @@ export default class NodeLeaderboard extends Vue {
 
     mounted() {
         this.nodeAddress = CookieManager.get('nodeaddress');
+        this.updateAuth = CookieManager.get('updateauth');
     }
 
     get nodes(): Node[] {
@@ -182,8 +185,11 @@ export default class NodeLeaderboard extends Vue {
     }
 
     updateLeaderboard() {
+        // One month expiration for cookie
+        CookieManager.set('updateauth', this.updateAuth, 30 * 24 * 60 * 60);
+
         this.updateResponse = '';
-        LeaderboardUpdater.setNodes(this.nodes).then((response: string) => {
+        LeaderboardUpdater.setNodes(this.nodes, this.updateAuth).then((response: string) => {
             this.updateResponse = response;
         });
     }
