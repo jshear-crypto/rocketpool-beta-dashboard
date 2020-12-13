@@ -4,6 +4,10 @@
             <NodeTypeahead :addresses="nodeAddresses" v-model="nodeAddress" @submit="searchForNode" />
             <button type="button" @click="searchForNode">Search</button>
             <span v-if="searchError" class="error">{{ searchError }}</span>
+            <div v-if="showUpdateLeaderboard">
+                <button v-if="showUpdateLeaderboard" type="button" @click="updateLeaderboard">Update</button>
+                <span>{{ updateResponse }}</span>
+            </div>
         </div>
         <div class="tableContainer">
             <span class="tableMessage">Click on any node address for additional information</span>
@@ -60,6 +64,7 @@ import Component from 'vue-class-component';
 import NodeTypeahead from '@/components/NodeTypeahead.vue';
 import { Node } from '@/utils/rocketpool';
 import CookieManager from '@/utils/CookieManager';
+import { LeaderboardUpdater } from '@/utils/LeaderboardUpdateManager';
 
 @Component({
     components: {
@@ -69,6 +74,7 @@ import CookieManager from '@/utils/CookieManager';
 export default class NodeLeaderboard extends Vue {
     nodeAddress = '';
     searchError = '';
+    updateResponse = '';
     searchedNodeIndex = 0;
     pageSize = 50;
     page = 1;
@@ -138,6 +144,10 @@ export default class NodeLeaderboard extends Vue {
         return `Showing ${start}-${end} of ${total}`;
     }
 
+    get showUpdateLeaderboard(): boolean {
+        return this.nodeAddress === '0x7E78228eCad2b14bEc742aF5507F102116D23E87' && this.$route.name === 'Dashboard';
+    }
+
     searchForNode() {
         // One month expiration for cookie
         CookieManager.set('nodeaddress', this.nodeAddress, 30 * 24 * 60 * 60);
@@ -170,6 +180,13 @@ export default class NodeLeaderboard extends Vue {
     onNodeSelected(rank: number) {
         this.selectedNode = this.nodes[rank - 1];
     }
+
+    updateLeaderboard() {
+        this.updateResponse = '';
+        LeaderboardUpdater.setNodes(this.nodes).then((response: string) => {
+            this.updateResponse = response;
+        });
+    }
 }
 </script>
 
@@ -191,6 +208,12 @@ export default class NodeLeaderboard extends Vue {
 .nodeSearch span {
     margin-left: 5px;
     font-weight: bold;
+}
+.nodeSearch button {
+    margin-right: 10px;
+}
+.nodeSearch div {
+    display: inline-block;
 }
 .tableContainer {
     text-align: center;

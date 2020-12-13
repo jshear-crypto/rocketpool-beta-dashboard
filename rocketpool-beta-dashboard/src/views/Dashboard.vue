@@ -1,6 +1,6 @@
 <template>
-    <div class="home" :class="{ padBottom: !showLeaderboard }">
-        <img alt="Vue logo" src="../assets/rplogo.png" />
+    <div class="dashboard" :class="{ padBottom: !showLeaderboard }">
+        <img alt="Rocket Pool Logo" src="../assets/rplogo.png" />
         <h1>Rocket Pool Pyrmont Beta Dashboard</h1>
         <br />
         <h3>
@@ -34,9 +34,10 @@ import { EmptyNode } from '@/utils/rocketpool';
         NodeOverview,
     },
 })
-export default class Home extends Vue {
+export default class Dashboard extends Vue {
     mounted() {
         if (window.location.protocol === 'https:') window.location.href = document.URL.replace('https://', 'http://');
+        this.$store.commit('updateNodes', []);
     }
 
     get showLeaderboard() {
@@ -59,7 +60,7 @@ export default class Home extends Vue {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-.home {
+.dashboard {
     margin-bottom: 30px;
 }
 .padBottom {
