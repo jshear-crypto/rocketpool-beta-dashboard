@@ -10,7 +10,7 @@ interface ContractArtifact {
 class Storage {
     public getArtifact(): ContractArtifact {
         const networkId = '5';
-        const storageAddress = '0xA85A8022E8F28E49B8BBfb792f93ee914B342C3b';
+        const storageAddress = '0xDeE7ec57E6b9f7F9A27e68821F3763e9d2537096';
         const networkAddresses: { [id: string]: { address: string } } = {
             [networkId]: { address: storageAddress },
         };
