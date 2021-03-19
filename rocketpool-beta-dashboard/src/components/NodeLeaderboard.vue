@@ -30,7 +30,7 @@
                             Number of Minipools
                         </th>
                         <th class="clickable" @click="sortProperty = 'rank'">
-                            Earnings (Top 2 Minipools)
+                            Earnings - Top {{ rewardMinipools }} Minipool(s)
                         </th>
                     </tr>
                 </thead>
@@ -85,6 +85,10 @@ export default class NodeLeaderboard extends Vue {
     mounted() {
         this.nodeAddress = CookieManager.get('nodeaddress');
         this.updateAuth = CookieManager.get('updateauth');
+    }
+
+    get rewardMinipools(): number {
+        return this.$store.getters.rewardMinipools;
     }
 
     get nodes(): Node[] {

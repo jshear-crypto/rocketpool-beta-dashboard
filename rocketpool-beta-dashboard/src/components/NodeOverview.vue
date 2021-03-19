@@ -14,7 +14,8 @@
             <br />
             <span class="descriptor">Address:</span><span>{{ node.address }}</span>
             <br />
-            <span class="descriptor">Earnings of Top 2 Nodes:</span><span>{{ node.rewardEarnings }}</span>
+            <span class="descriptor">Earnings of Top {{ rewardMinipools }} Minipool(s):</span
+            ><span>{{ node.rewardEarnings }}</span>
             <br />
             <span class="descriptor">Minipools:</span><span>{{ node.minipools.length }}</span>
             <ul class="minipoolList">
@@ -52,6 +53,10 @@ import { Node, EmptyNode } from '@/utils/rocketpool';
 @Component({})
 export default class NodeOverview extends Vue {
     selectedMinipool: Minipool = EmptyMinipool;
+
+    get rewardMinipools(): number {
+        return this.$store.getters.rewardMinipools;
+    }
 
     get node() {
         return this.$store.getters.selectedNode || EmptyNode;

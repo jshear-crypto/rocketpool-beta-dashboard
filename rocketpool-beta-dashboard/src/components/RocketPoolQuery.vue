@@ -59,6 +59,8 @@ export default class RocketPoolQuery extends Vue {
         const eth2Cookie = CookieManager.get('eth2host');
         if (eth1Cookie !== '') this.eth1Host = eth1Cookie;
         if (eth2Cookie !== '') this.eth2Host = eth2Cookie;
+
+        this.rewardMinipools = 1;
     }
 
     get nodes() {
@@ -67,6 +69,14 @@ export default class RocketPoolQuery extends Vue {
 
     set nodes(nodes: Node[]) {
         this.$store.commit('updateNodes', nodes);
+    }
+
+    get rewardMinipools() {
+        return this.$store.getters.rewardMinipools;
+    }
+
+    set rewardMinipools(numPools: number) {
+        this.$store.commit('setRewardMinipools', numPools);
     }
 
     fetchNodes() {
@@ -81,7 +91,7 @@ export default class RocketPoolQuery extends Vue {
 
         this.fetchingNodes = true;
 
-        const rp: RocketPoolAPI = new RocketPoolAPI(this.eth1Host, this.eth2Host);
+        const rp: RocketPoolAPI = new RocketPoolAPI(this.eth1Host, this.eth2Host, this.rewardMinipools);
         rp.getNodeInformation()
             .then((nodes: Node[]) => {
                 this.fetchingNodes = false;

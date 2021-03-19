@@ -21,11 +21,15 @@ class RocketPoolAPI {
     public rpInstance: RocketPool;
     private eth1Host: string;
     private eth2Host: string;
+    private rewardMinipools: number;
 
-    public constructor(eth1Host: string, eth2Host: string) {
+    public constructor(eth1Host: string, eth2Host: string, rewardMinipools?: number) {
         this.eth1Host = eth1Host;
         this.eth2Host = eth2Host;
         this.rpInstance = new RocketPool(this.getProvider(true), new Storage().getArtifact());
+
+        if (rewardMinipools === undefined) rewardMinipools = 1;
+        this.rewardMinipools = rewardMinipools;
     }
 
     public getNodeInformation(): Promise<Node[]> {
@@ -69,34 +73,16 @@ class RocketPoolAPI {
                     return { address: address, rank: 0, minipools: [], rewardEarnings: 0 };
                 }
 
-                if (minipools.length === 1) {
-                    return {
-                        address: address,
-                        rank: 0,
-                        minipools: minipools,
-                        rewardEarnings: Number(
-                            Web3.utils.fromWei(
-                                (Number(minipools[0].balance) - Number(Web3.utils.toWei('32', 'gwei'))).toString(),
-                                'gwei'
-                            )
-                        ),
-                    };
+                let rewards = 0;
+                for (let i = 0; i < this.rewardMinipools && i < minipools.length; ++i) {
+                    rewards += Number(minipools[i].balance) - Number(Web3.utils.toWei('32', 'gwei'));
                 }
 
                 return {
                     address: address,
                     rank: 0,
                     minipools: minipools,
-                    rewardEarnings: Number(
-                        Web3.utils.fromWei(
-                            (
-                                Number(minipools[0].balance) +
-                                Number(minipools[1].balance) -
-                                Number(Web3.utils.toWei('64', 'gwei'))
-                            ).toString(),
-                            'gwei'
-                        )
-                    ),
+                    rewardEarnings: Number(Web3.utils.fromWei(rewards.toString(), 'gwei')),
                 };
             }
         );

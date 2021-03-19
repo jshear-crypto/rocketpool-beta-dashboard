@@ -8,6 +8,7 @@ export default new Vuex.Store({
     state: {
         nodes: Array<Node>(),
         selectedNode: EmptyNode,
+        rewardMinipools: 0,
     },
     getters: {
         nodes: state => {
@@ -16,6 +17,9 @@ export default new Vuex.Store({
         selectedNode: state => {
             return state.selectedNode;
         },
+        rewardMinipools: state => {
+            return state.rewardMinipools;
+        },
     },
     mutations: {
         selectNode(state, node: Node) {
@@ -23,6 +27,9 @@ export default new Vuex.Store({
         },
         updateNodes(state, nodes: Node[]) {
             state.nodes = nodes;
+        },
+        setRewardMinipools(state, numPools: number) {
+            state.rewardMinipools = numPools;
         },
     },
     actions: {},
